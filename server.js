@@ -3,7 +3,17 @@ const cors = require("cors");
 const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 
 const app = express();
-app.use(cors()); // Allow browser requests from anywhere
+
+// Explicitly allow all origins with full CORS headers
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+// Handle OPTIONS preflight for all routes
+app.options("*", cors());
+
 app.use(express.json());
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN;
